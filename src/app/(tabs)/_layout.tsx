@@ -1,22 +1,26 @@
-import Ionicons from '@react-native-vector-icons/ant-design';
+import useTheme from '@/hooks/useTheme';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
 
 const TabsLayOut = () => {
+
+    const {colors} = useTheme()
+
   return (
     <Tabs 
     screenOptions={{
-        tabBarActiveTintColor:'red',
-        tabBarInactiveTintColor:"green",
+        tabBarActiveTintColor:colors.primary,
+        tabBarInactiveTintColor:colors.textMuted,
         tabBarStyle:{
-            backgroundColor:"#1e293b",
+            backgroundColor:colors.surface,
             borderWidth:1,
-            borderTopColor:"yellow",
+            borderTopColor:colors.border,
             height:90,
             paddingBottom:30,
             paddingTop:10
         },
         tabBarLabelStyle:{
-            fontSize:12,
+            fontSize:19,
             fontWeight:'500'
         },
        headerShown:false
@@ -32,10 +36,10 @@ const TabsLayOut = () => {
         
         />
          <Tabs.Screen
-        name='settings'
-        options={{title:"Setting",
+        name='setting'
+        options={{title:"setting",
             tabBarIcon:({color,size})=>(
-                <Ionicons name='setting'  size={size} color={color} />
+                <Ionicons name='settings'  size={size} color={color} />
             )
         }}
         
