@@ -14,7 +14,7 @@ const Headr = () => {
     const HomeStyles = createHomeStyles(colors)
     const todos= useQuery(api.todos.getTodos)
 
-    const completeCount = todos ? todos.filter((todo) => todo.isComplete).length :0
+    const completeCount = todos ? todos.filter((todo) => todo.isComplete).length : 0
     const totalCount = todos ? todos.length : 0
     const progressPercentage = totalCount > 0 ? (completeCount/totalCount)*100 :0 
 

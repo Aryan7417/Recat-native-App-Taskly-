@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Headr from "../../../components/Headr";
+import TodoInput from "../../../components/todoInput";
 
 
 
@@ -23,6 +24,7 @@ export default function Index() {
 
     <SafeAreaView style={HomeStyles.safeArea} >
       <Headr/>
+      <TodoInput/>
 
     
       <TouchableOpacity onPress={toggleDarkMode}>
