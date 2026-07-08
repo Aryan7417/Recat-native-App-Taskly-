@@ -18,7 +18,7 @@ export const addTodo = mutation({
         const todoId = await ctx.db.insert("todos",{
 
             text:args.text,
-            isComplete:true
+            isComplete:false
         })
 
         return todoId
