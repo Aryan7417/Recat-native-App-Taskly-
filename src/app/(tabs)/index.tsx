@@ -20,6 +20,7 @@ export default function Index() {
   const HomeStyles  = createHomeStyles(colors)
   const todos = useQuery(api.todos.getTodos)
   const toggleTodo = useMutation(api.todos.toggletodo)
+  const deleteTodod = useMutation(api.todos.deleteTodo)
   
 
 
@@ -40,10 +41,15 @@ export default function Index() {
     }
   }
 
-
-  const cosns= ()=>{
-    console.log("test")
+  const handleDeleteTodo=async(id:Id<"todos">)=>{
+    Alert.alert("Delete Todo" ,"Dek Le kr do Delete🗑️",[
+      {text:"Cancle", style:"cancel"},
+      {text:"Delete" , style:"destructive", onPress:()=>deleteTodod({id})}
+    ])
+    
   }
+
+ 
 
   const rendertodoItem = ({item} :{item:Todo})=>{
 
@@ -107,7 +113,7 @@ export default function Index() {
               </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>{}} activeOpacity={0.8}>
+            <TouchableOpacity onPress={()=>handleDeleteTodo(item._id)} activeOpacity={0.8}>
               <LinearGradient
               colors={colors.gradients.danger}
               style={HomeStyles.actionButton}
