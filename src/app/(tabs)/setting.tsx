@@ -5,8 +5,8 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Preferences from '../../../components/Preferences'
 import ProgressStats from '../../../components/ProgressStats'
-
 const setting = () => {
   const [isAurosync,seIsAutosync] = useState(true)
   const [isNotification,setIsNotification] = useState(true)
@@ -35,10 +35,12 @@ const setting = () => {
           showsVerticalScrollIndicator={false}
         >
           <ProgressStats />
+          <Preferences/>
           
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
+    
   );
 }
 
