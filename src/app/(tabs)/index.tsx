@@ -3,7 +3,8 @@ import useTheme from "@/hooks/useTheme";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMutation, useQuery } from "convex/react";
 import { LinearGradient } from 'expo-linear-gradient';
-import { Alert, FlatList, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import { Alert, FlatList, StatusBar, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EmptyState from "../../../components/EmptyState";
 import Headr from "../../../components/Headr";
@@ -16,11 +17,16 @@ import { Doc, Id } from "../../../convex/_generated/dataModel";
 type Todo = Doc<"todos">
 export default function Index() {
   
-  const { toggleDarkMode,colors } = useTheme()
+  const { colors } = useTheme()
+  const [editingId,setEditingID] = useState<Id<"todos"> | null>(null)
+  const [editText,setEditText] = useState("")
+
+
   const HomeStyles  = createHomeStyles(colors)
   const todos = useQuery(api.todos.getTodos)
   const toggleTodo = useMutation(api.todos.toggletodo)
   const deleteTodod = useMutation(api.todos.deleteTodo)
+  const updateTodo = useMutation(api.todos.updateTodo)
   
 
 
@@ -49,9 +55,35 @@ export default function Index() {
     
   }
 
+
+  const handleEditTodo = (todo:Todo)=>{
+    setEditText(todo.text)
+    setEditingID(todo._id)
+
+  }
+  const handleSaveEdit = async()=>{
+    if(editingId){
+
+      try {
+        await updateTodo({id:editingId, text:editText.trim()})
+        setEditingID(null)
+        setEditText("")
+        
+      } catch (error) {
+        console.log("Error updating todo",error)
+        Alert.alert("Error","Faiedl to update todo")
+      }
+    }
+  }
+  const handleCancleEdit = ()=>{
+    setEditingID(null);
+    setEditText("")
+  }
+
  
 
   const rendertodoItem = ({item} :{item:Todo})=>{
+    const isEdiiting = editingId===item._id
 
     return (
       <View style ={HomeStyles.todoItemWrapper} >
@@ -90,7 +122,45 @@ export default function Index() {
           </LinearGradient>
         </TouchableOpacity>
 
-        <View style={HomeStyles.todoTextContainer}>
+        {isEdiiting ? (
+          <View style={HomeStyles.editContainer}>
+            <TextInput
+            style={HomeStyles.editInput}
+            value={editText}
+            onChangeText={setEditText}
+            autoFocus
+            multiline
+            placeholder="Edit your todo...🤐🤐"
+            placeholderTextColor={colors.textMuted}
+             />
+             <View style={HomeStyles.editButton}>
+              <TouchableOpacity onPress={handleSaveEdit} activeOpacity={0.8} >
+                <LinearGradient
+                colors={colors.gradients.success} 
+                style={HomeStyles.editButton}>
+                  <Ionicons name ='checkmark' size={16} color="#fff" />
+                  <Text style={HomeStyles.editButtonText} >Save</Text>
+                  
+                </LinearGradient>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={handleCancleEdit} activeOpacity={0.8} >
+                <LinearGradient colors={colors.gradients.muted} style={HomeStyles.editButton} >
+                  <Ionicons name="close" size={16} color="#fff" />
+                  <Text style={HomeStyles.editButtonText} >Cancel</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+
+
+
+             </View>
+
+
+          </View>
+
+
+        ):(
+          <View style={HomeStyles.todoTextContainer}>
           <Text 
           style={[
             HomeStyles.todoText,
@@ -106,7 +176,7 @@ export default function Index() {
           </Text>
 
           <View style={HomeStyles.todoActions}>
-            <TouchableOpacity onPress={()=>{}} activeOpacity={0.8}>
+            <TouchableOpacity onPress={()=>handleEditTodo(item)} activeOpacity={0.8}>
               <LinearGradient colors={colors.gradients.warning}
               style={HomeStyles.actionButton}>
                 <Ionicons name='pencil' size={14} color="#fff" />
@@ -128,6 +198,7 @@ export default function Index() {
 
 
         </View>
+        )}
 
         </LinearGradient>
       </View>
